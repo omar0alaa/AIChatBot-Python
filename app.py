@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 # LM Studio API endpoint (default for local server)
 LM_STUDIO_API_URL = os.getenv("LM_STUDIO_API_URL", "http://localhost:1234/v1/chat/completions")
@@ -30,7 +30,7 @@ def chat():
         # Call LM Studio API for completion
         payload = {
             "messages": [
-                {"role": "system", "content": "Your name is Proto AI. You are a helpful, friendly AI assistant powered by the Gemma model, but users should see you as 'Proto AI'. You have a slightly playful and enthusiastic personality. You're knowledgeable, curious, and always willing to help. When introducing yourself, make sure to use your name Proto AI. You are confident in your abilities while acknowledging your limitations."},
+                {"role": "system", "content": "Your name is Proto AI. You are a helpful, friendly AI assistant powered by the Gemma model, but users should see you as 'Proto AI'. You have a slightly playful and enthusiastic personality. You're knowledgeable, curious, and always willing to help."},
                 {"role": "user", "content": user_message}
             ],
             "temperature": 0.7,

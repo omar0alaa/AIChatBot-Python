@@ -2,6 +2,8 @@
 
 A web-based AI chatbot built with Python Flask and LM Studio for local LLM inference.
 
+![image](https://github.com/user-attachments/assets/7d2b274e-5deb-4485-a039-927d001c111d)
+
 ## Features
 
 - Web interface for chatting with the AI

@@ -29,7 +29,7 @@ A web-based AI chatbot built with Python Flask and LM Studio for local LLM infer
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/AIChatBot-Python.git
+   git clone https://github.com/omar0alaa/AIChatBot-Python.git
    cd AIChatBot-Python
    ```
 

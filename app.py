@@ -17,6 +17,11 @@ def index():
     """Render the chat interface."""
     return render_template('index.html')
 
+@app.route('/widget')
+def widget():
+    """Render the widget chat interface."""
+    return render_template('widget.html')
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """Process user messages and get AI responses."""
@@ -30,7 +35,7 @@ def chat():
         # Call LM Studio API for completion
         payload = {
             "messages": [
-                {"role": "system", "content": "Your name is Proto AI. You are a helpful, friendly AI assistant powered by the Gemma model, but users should see you as 'Proto AI'. You have a slightly playful and enthusiastic personality. You're knowledgeable, curious, and always willing to help."},
+                {"role": "system", "content": "Your name is Proto AI. You are a helpful, friendly AI assistant, but users should see you as 'Proto AI'. You have a slightly playful and enthusiastic personality. You're knowledgeable, curious, and always willing to help."},
                 {"role": "user", "content": user_message}
             ],
             "temperature": 0.7,
@@ -52,4 +57,4 @@ def chat():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)

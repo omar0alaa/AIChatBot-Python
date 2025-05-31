@@ -87,6 +87,9 @@ payload = {
     "max_tokens": 500    # Maximum response length
 }
 ```
+## TO DO 
+1. Implement Chat History
+2. Change backend to send AI Description only at the start of conversation
 
 ## Deployment
 

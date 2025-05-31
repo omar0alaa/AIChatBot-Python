@@ -1,6 +1,6 @@
-# AI Chatbot with Python and LM Studio
+# AI Chatbot with Python and Ollama
 
-A web-based AI chatbot built with Python Flask and LM Studio for local LLM inference.
+A web-based AI chatbot built with Python Flask and Ollama for local LLM inference.
 
 ![image](https://github.com/user-attachments/assets/7d2b274e-5deb-4485-a039-927d001c111d)
 
@@ -8,24 +8,25 @@ A web-based AI chatbot built with Python Flask and LM Studio for local LLM infer
 
 - Web interface for chatting with the AI
 - Backend API built with Flask
-- Integration with LM Studio for local LLM inference
+- Integration with Ollama for local LLM inference
 - Responsive UI with modern design
 - No API keys or cloud services required
 
 ## Prerequisites
 
-1. Install [LM Studio](https://lmstudio.ai/) on your computer
-2. Download a language model through LM Studio
-3. Start the local server in LM Studio
+1. Install [Ollama](https://ollama.com/) on your computer or server
+2. Download a language model through Ollama (e.g., llama3, gemma2:2b, etc.)
+3. Start the Ollama server
 
-## LM Studio Setup
+## Ollama Setup
 
-1. Download and install LM Studio from [lmstudio.ai](https://lmstudio.ai/)
-2. Open LM Studio and download a language model (e.g., Llama 2, Mistral, or similar)
-3. Select the downloaded model
-4. Go to the "Local Server" tab
-5. Click "Start Server" to launch the local API server
-6. The server should be running on http://localhost:1234 by default
+1. Download and install Ollama from [ollama.com](https://ollama.com/)
+2. Open a terminal and run:
+   ```
+   ollama run llama3
+   ```
+   Or replace `llama3` with your preferred model (e.g., `gemma2:2b`).
+3. The server should be running on http://localhost:11434 by default
 
 ## Chatbot Setup
 
@@ -49,9 +50,10 @@ A web-based AI chatbot built with Python Flask and LM Studio for local LLM infer
    pip install -r requirements.txt
    ```
 
-4. (Optional) Create a `.env` file to customize the LM Studio API endpoint:
+4. (Optional) Create a `.env` file to customize the Ollama API endpoint or model:
    ```
-   LM_STUDIO_API_URL=http://localhost:1234/v1/chat/completions
+   OLLAMA_API_URL=http://localhost:11434/api/chat
+   OLLAMA_MODEL=gemma2:2b
    ```
 
 5. Run the application:
@@ -93,8 +95,8 @@ payload = {
 
 ## Deployment
 
-This application is designed to work with a local LM Studio server. For production use, consider running both the Flask application and LM Studio on the same server.
+This application is designed to work with a local Ollama server. For production use, consider running both the Flask application and Ollama on the same server.
 
 ## License
 
-See the LICENSE file for details. 
+See the LICENSE file for details.

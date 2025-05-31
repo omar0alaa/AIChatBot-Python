@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import os
 from dotenv import load_dotenv
+import json
 
 # Load environment variables
 load_dotenv()
@@ -34,20 +35,28 @@ def chat():
     try:
         # Call Ollama API for completion
         payload = {
-            "model": "llama3",
+            "model": "gemma2:2b",
             "messages": [
                 {"role": "system", "content": "Your name is Proto AI. You are a helpful, friendly AI assistant, but users should see you as 'Proto AI'. You have a slightly playful and enthusiastic personality. You're knowledgeable, curious, and always willing to help."},
                 {"role": "user", "content": user_message}
             ]
         }
-        response = requests.post(OLLAMA_API_URL, json=payload)
+        response = requests.post(OLLAMA_API_URL, json=payload, stream=True)
         response.raise_for_status()
-        response_data = response.json()
-        # Extract the assistant's reply (Ollama returns 'message' in 'message' key)
-        ai_message = response_data['message']['content']
-        return jsonify({
-            'message': ai_message
-        })
+        response_text = ''
+        for line in response.iter_lines(decode_unicode=True):
+            if line:
+                try:
+                    response_data = json.loads(line)
+                    if 'message' in response_data and 'content' in response_data['message']:
+                        response_text += response_data['message']['content']
+                except Exception:
+                    continue
+        if not response_text:
+            # fallback for non-streaming response
+            response_data = response.json()
+            response_text = response_data['message']['content']
+        return jsonify({'message': response_text})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

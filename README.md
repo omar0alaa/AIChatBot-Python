@@ -92,6 +92,10 @@ payload = {
 ## TO DO 
 1. Implement Chat History
 2. Change backend to send AI Description only at the start of conversation
+3. Add Custom API for chatting and test with Postman
+4. Enhance the reply speed 
+5. Enhance the reply formatting 
+6. Use better persona description
 
 ## Deployment
 

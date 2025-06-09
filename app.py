@@ -62,21 +62,23 @@ def chat():
     # Add user message
     chat_history.append({"role": "user", "content": user_message})
     
-    # Summarize old history if too long
+    # Summarize each old message if too long
     MAX_HISTORY = 5
     if len(chat_history) > MAX_HISTORY:
-        # Only summarize user/assistant messages, not system (Persona prompt)
-        to_summarize = chat_history[1:-MAX_HISTORY+1] if len(chat_history) > (MAX_HISTORY+1) else chat_history[1:-MAX_HISTORY+2]
-        summary_text = ''
-        for msg in to_summarize:
-            summary_text += f"{msg['role'].capitalize()}: {msg['content']}\n"
-        parser = PlaintextParser.from_string(summary_text, Tokenizer("english"))
+        summarized_history = [chat_history[0]]  # Always keep the system prompt
         summarizer = LsaSummarizer()
-        summary_sentences = summarizer(parser.document, 6)  # 6 sentences summary (was 3)
-        summary = ' '.join(str(sentence) for sentence in summary_sentences)
-        # Replace old messages with summary
-        chat_history = [chat_history[0]] + [{"role": "system", "content": f"Summary of earlier conversation: {summary}"}] + chat_history[-MAX_HISTORY+1:]
-    
+        for msg in chat_history[1:-MAX_HISTORY+1]:
+            # Summarize each message to N sentence if it's long
+            if len(msg['content'].split()) > 40:
+                parser = PlaintextParser.from_string(msg['content'], Tokenizer("english"))
+                summary_sentences = summarizer(parser.document, 3) # (N) Summarize to 3 sentence
+                summary = ' '.join(str(sentence) for sentence in summary_sentences)
+                summarized_history.append({"role": msg['role'], "content": f"Summary: {summary}"})
+            else:
+                summarized_history.append(msg)
+        # Add the most recent messages in full
+        summarized_history += chat_history[-MAX_HISTORY+1:]
+        chat_history = summarized_history
     try:
         payload = {
             "model": "gemma2:2b",

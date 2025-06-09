@@ -96,6 +96,7 @@ payload = {
 4. Enhance the reply speed 
 5. Enhance the reply formatting 
 6. Use better persona description
+7. Better Token usage efficiency
 
 ## Deployment
 

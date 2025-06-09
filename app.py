@@ -4,6 +4,14 @@ import os
 from dotenv import load_dotenv
 import json
 import nltk
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer
+
+# Load environment variables
+load_dotenv()
+
+# Ensure nltk punkt tokenizer is available
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -15,12 +23,6 @@ except LookupError:
         nltk.download('punkt_tab')
     except Exception:
         pass
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
-
-# Load environment variables
-load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='static')
@@ -32,17 +34,17 @@ OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://localhost:11434/api/chat")
 
 @app.route('/')
 def index():
-    """Render the chat interface."""
+    #Render the chat interface.
     return render_template('index.html')
 
 @app.route('/widget')
 def widget():
-    """Render the widget chat interface."""
+    #Render the widget chat interface.
     return render_template('widget.html')
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    """Process user messages and get AI responses from Ollama, sending system prompt only at start of session."""
+    #Process user messages and get AI responses from Ollama, sending system prompt only at start of session.
     data = request.json
     user_message = data.get('message', '')
     

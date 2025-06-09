@@ -76,7 +76,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message');
         messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-        messageDiv.textContent = text;
+        
+        // Format AI (bot) messages as Markdown to HTML for better organization
+        if (sender === 'bot') {
+            messageDiv.innerHTML = window.marked ? window.marked.parse(text) : text.replace(/\n/g, '<br>');
+        } else {
+            messageDiv.textContent = text;
+        }
+        
         chatMessages.appendChild(messageDiv);
         
         scrollToBottom();
@@ -144,4 +151,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
         });
     }
-}); 
+});

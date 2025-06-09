@@ -24,7 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function appendMessage(text, sender) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `widget-message ${sender}-message`;
-        msgDiv.textContent = text;
+        // Format AI (bot) messages as Markdown to HTML for better organization
+        if (sender === 'bot') {
+            msgDiv.innerHTML = window.marked ? window.marked.parse(text) : text.replace(/\n/g, '<br>');
+        } else {
+            msgDiv.textContent = text;
+        }
         messages.appendChild(msgDiv);
         messages.scrollTop = messages.scrollHeight;
         return msgDiv;

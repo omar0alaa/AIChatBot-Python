@@ -72,7 +72,7 @@ def chat():
             summary_text += f"{msg['role'].capitalize()}: {msg['content']}\n"
         parser = PlaintextParser.from_string(summary_text, Tokenizer("english"))
         summarizer = LsaSummarizer()
-        summary_sentences = summarizer(parser.document, 3)  # 3 sentences summary
+        summary_sentences = summarizer(parser.document, 6)  # 6 sentences summary (was 3)
         summary = ' '.join(str(sentence) for sentence in summary_sentences)
         # Replace old messages with summary
         chat_history = [chat_history[0]] + [{"role": "system", "content": f"Summary of earlier conversation: {summary}"}] + chat_history[-MAX_HISTORY+1:]

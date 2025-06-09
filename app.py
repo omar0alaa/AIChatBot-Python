@@ -3,6 +3,21 @@ import requests
 import os
 from dotenv import load_dotenv
 import json
+import nltk
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+try:
+    nltk.data.find('tokenizers/punkt_tab/english.pickle')
+except LookupError:
+    try:
+        nltk.download('punkt_tab')
+    except Exception:
+        pass
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer
 
 # Load environment variables
 load_dotenv()
@@ -10,6 +25,7 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'protoai-secret-key')
+
 
 # OLLAMA API endpoint (default for local server)
 OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://localhost:11434/api/chat")
@@ -43,6 +59,22 @@ def chat():
         })
     # Add user message
     chat_history.append({"role": "user", "content": user_message})
+    
+    # Summarize old history if too long
+    MAX_HISTORY = 5
+    if len(chat_history) > MAX_HISTORY:
+        # Only summarize user/assistant messages, not system (Persona prompt)
+        to_summarize = chat_history[1:-MAX_HISTORY+1] if len(chat_history) > (MAX_HISTORY+1) else chat_history[1:-MAX_HISTORY+2]
+        summary_text = ''
+        for msg in to_summarize:
+            summary_text += f"{msg['role'].capitalize()}: {msg['content']}\n"
+        parser = PlaintextParser.from_string(summary_text, Tokenizer("english"))
+        summarizer = LsaSummarizer()
+        summary_sentences = summarizer(parser.document, 3)  # 3 sentences summary
+        summary = ' '.join(str(sentence) for sentence in summary_sentences)
+        # Replace old messages with summary
+        chat_history = [chat_history[0]] + [{"role": "system", "content": f"Summary of earlier conversation: {summary}"}] + chat_history[-MAX_HISTORY+1:]
+    
     try:
         payload = {
             "model": "gemma2:2b",
